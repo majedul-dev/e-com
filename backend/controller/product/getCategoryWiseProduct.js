@@ -27,7 +27,7 @@ const productModel = require("../../models/productModel");
 const getCategoryWiseProduct = async (req, res) => {
   try {
     // Destructure category from query parameters, along with pagination parameters (page, limit)
-    const { category } = req.query;
+    const { category } = req?.body || req?.query;
     const page = parseInt(req.query.page) || 1;  // Default to page 1 if not provided
     const limit = parseInt(req.query.limit) || 10; // Default to 10 products per page if not provided
 

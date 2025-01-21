@@ -25,8 +25,6 @@ const VerticalCardProduct = ({category, heading}) => {
         setLoading(true)
         const categoryProduct = await fetchCategoryWiseProduct(category)
         setLoading(false)
-
-        console.log("horizontal data",categoryProduct.data)
         setData(categoryProduct?.data)
     }
 
@@ -56,9 +54,9 @@ const VerticalCardProduct = ({category, heading}) => {
            {
 
                 loading ? (
-                    loadingList.map((product,index)=>{
+                    loadingList?.map((product,index)=>{
                         return(
-                            <div className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
+                            <div key={index} className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
                                 <div className='bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center animate-pulse'>
                                 </div>
                                 <div className='p-4 grid gap-3'>
@@ -74,9 +72,9 @@ const VerticalCardProduct = ({category, heading}) => {
                         )
                     })
                 ) : (
-                    data.map((product,index)=>{
+                    data?.map((product,index)=>{
                         return(
-                            <Link to={"product/"+product?._id} className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
+                            <Link key={index} to={"product/"+product?._id} className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
                                 <div className='bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center'>
                                     <img src={product.productImage[0]} className='object-scale-down h-full hover:scale-110 transition-all mix-blend-multiply'/>
                                 </div>

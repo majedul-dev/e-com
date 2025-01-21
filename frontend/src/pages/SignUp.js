@@ -14,8 +14,6 @@ const SignUp = () => {
       email : "",
       password : "",
       name : "",
-      confirmPassword : "",
-      profilePic : "",
   })
   const navigate = useNavigate()
 
@@ -30,26 +28,23 @@ const SignUp = () => {
       })
   }
 
-  const handleUploadPic = async(e) =>{
-    const file = e.target.files[0]
+//   const handleUploadPic = async(e) =>{
+//     const file = e.target.files[0]
     
-    const imagePic = await imageTobase64(file)
+//     const imagePic = await imageTobase64(file)
     
-    setData((preve)=>{
-      return{
-        ...preve,
-        profilePic : imagePic
-      }
-    })
+//     setData((preve)=>{
+//       return{
+//         ...preve,
+//         profilePic : imagePic
+//       }
+//     })
 
-  }
+//   }
 
 
   const handleSubmit = async(e) =>{
       e.preventDefault()
-
-      if(data.password === data.confirmPassword){
-
         const dataResponse = await fetch(SummaryApi.signUP.url,{
             method : SummaryApi.signUP.method,
             headers : {
@@ -69,9 +64,6 @@ const SignUp = () => {
             toast.error(dataApi.message)
           }
     
-      }else{
-        toast.error("Please check password and confirm password")
-      }
 
   }
 
@@ -81,7 +73,7 @@ const SignUp = () => {
 
             <div className='bg-white p-5 w-full max-w-sm mx-auto'>
 
-                    <div className='w-20 h-20 mx-auto relative overflow-hidden rounded-full'>
+                    {/* <div className='w-20 h-20 mx-auto relative overflow-hidden rounded-full'>
                         <div>
                             <img src={data.profilePic || loginIcons} alt='login icons'/>
                         </div>
@@ -93,7 +85,7 @@ const SignUp = () => {
                             <input type='file' className='hidden' onChange={handleUploadPic}/>
                           </label>
                         </form>
-                    </div>
+                    </div> */}
 
                     <form className='pt-6 flex flex-col gap-2' onSubmit={handleSubmit}>
                       <div className='grid'>
@@ -150,7 +142,7 @@ const SignUp = () => {
                             </div>
                         </div>
 
-                        <div>
+                        {/* <div>
                             <label>Confirm Password : </label>
                             <div className='bg-slate-100 p-2 flex'>
                                 <input 
@@ -176,7 +168,7 @@ const SignUp = () => {
                                     </span>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <button className='bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6'>Sign Up</button>
 

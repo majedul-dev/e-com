@@ -43,40 +43,70 @@ const userModel = require("../../models/userModel");
 
 async function updateUser(req, res) {
     try {
-        const sessionUser = req.userId; // Get the authenticated user ID from the token
-        const { email, name, role, status, address } = req.body;
+        const sessionUserId = req.userId; // Authenticated user ID from the token
+        const { userId, email, name, role, status, address } = req.body;
 
-        // Check if the current user is an "ADMIN" before allowing role update
-        const currentUser = await userModel.findById(sessionUser);
-        const userToUpdate = await userModel.findById(sessionUser);
+        // Check if the current user is an "ADMIN"
+        const currentUser = await userModel.findById(sessionUserId);
 
-        if (!userToUpdate) {
+        if (!currentUser) {
             return res.status(404).json({
-                message: "User not found",
+                message: "Authenticated user not found",
                 error: true,
                 success: false,
             });
         }
 
-        // If the current user is not an "ADMIN", they cannot change the "role"
-        if (currentUser.role !== 'ADMIN' && role) {
-            return res.status(403).json({
-                message: "Only admins can change the role",
+        if (!userId) {
+            return res.status(400).json({
+                message: "Target user ID is required",
                 error: true,
                 success: false,
             });
+        }
+
+        const userToUpdate = await userModel.findById(userId);
+
+        if (!userToUpdate) {
+            return res.status(404).json({
+                message: "User to update not found",
+                error: true,
+                success: false,
+            });
+        }
+
+        // Role update restrictions
+        if (role) {
+            if (currentUser.role !== "ADMIN") {
+                return res.status(403).json({
+                    message: "Only admins can update roles",
+                    error: true,
+                    success: false,
+                });
+            }
+
+            // Prevent changing the role of the last admin
+            if (userToUpdate.role === "ADMIN" && role !== "ADMIN") {
+                const adminCount = await userModel.countDocuments({ role: "ADMIN" });
+                if (adminCount === 1) {
+                    return res.status(403).json({
+                        message: "Cannot change the role of the last admin",
+                        error: true,
+                        success: false,
+                    });
+                }
+            }
         }
 
         // Prepare the payload with valid fields
         const payload = {
             ...(email && { email }),
             ...(name && { name }),
-            ...(role && { role }), // Role can only be updated by an ADMIN
+            ...(role && { role }), // Only admins can update roles
             ...(status && { status }),
             ...(address && { address }),
         };
 
-        // If no fields to update, return an error
         if (Object.keys(payload).length === 0) {
             return res.status(400).json({
                 message: "No valid fields provided for update",
@@ -85,8 +115,8 @@ async function updateUser(req, res) {
             });
         }
 
-        // Update the user data
-        const updatedUser = await userModel.findByIdAndUpdate(sessionUser, payload, { new: true }).select("-password");
+        // Update the target user
+        const updatedUser = await userModel.findByIdAndUpdate(userId, payload, { new: true }).select("-password");
 
         res.json({
             data: updatedUser,
@@ -104,3 +134,4 @@ async function updateUser(req, res) {
 }
 
 module.exports = updateUser;
+
