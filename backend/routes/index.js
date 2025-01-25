@@ -22,6 +22,7 @@ const updateAddToCartProduct = require('../controller/user/updateAddToCartProduc
 const deleteAddToCartProduct = require('../controller/user/deleteAddToCartProduct')
 const searchProduct = require('../controller/product/searchProduct')
 const filterProductController = require('../controller/product/filterProduct')
+const {createOrder, deleteOrder, getOrderById, getOrdersByAdmin, getOrdersByUser, updateOrderStatus} = require('../controller/order')
 
 
 
@@ -40,7 +41,7 @@ router.get("/get-product",getProductController)
 router.post("/update-product",authToken,updateProductController)
 router.get("/get-categoryProduct",getCategoryProduct)
 router.post("/category-product",getCategoryWiseProduct)
-router.post("/product-details",getProductDetails)
+router.get("/product-details/:productId",getProductDetails)
 router.get("/search",searchProduct)
 router.post("/filter-product",filterProductController)
 
@@ -48,12 +49,16 @@ router.post("/filter-product",filterProductController)
 router.post("/addtocart",authToken,addToCartController)
 router.get("/countAddToCartProduct",authToken,countAddToCartProduct)
 router.get("/view-card-product",authToken,addToCartViewProduct)
-router.post("/update-cart-product",authToken,updateAddToCartProduct)
-router.post("/delete-cart-product",authToken,deleteAddToCartProduct)
+router.patch("/update-cart-product",authToken,updateAddToCartProduct)
+router.post("/delete-cart-product", authToken, deleteAddToCartProduct)
 
-
-
-
+//order
+router.post("/create-order",authToken, createOrder)
+router.delete("/delete-order/:orderId",authToken, deleteOrder)
+router.patch("/update-order-status/:orderId",authToken, updateOrderStatus)
+router.get("/orderbyid/:orderId",authToken, getOrderById)
+router.get("/allordersbyadmin",authToken, getOrdersByAdmin)
+router.get("/allordersbyuser",authToken, getOrdersByUser)
 
 
 
