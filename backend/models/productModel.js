@@ -22,7 +22,6 @@ const productSchema = new mongoose.Schema(
     {
       productName: {
         type: String,
-        required: [true, 'Product name is required'],
         trim: true,
         minlength: [3, 'Product name must be at least 3 characters long'],
         maxlength: [100, 'Product name cannot exceed 100 characters'],
@@ -59,21 +58,18 @@ const productSchema = new mongoose.Schema(
       },
       sellingPrice: {
         type: Number,
-        required: [true, 'Selling price is required'],
-        min: [0, 'Selling price cannot be negative'],
-        validate: {
-          validator: function (value) {
-            return value <= this.price;
-          },
-          message: 'Selling price cannot be greater than the original price.',
-        },
       },
       stock: {
         type: Number,
         required: [true, 'Stock quantity is required'],
         min: [0, 'Stock cannot be negative'],
         default: 0,
-      },
+    },
+    sku: {
+      type: String,
+      required: [true, 'SKU is required'],
+      min: [2, 'Minimum sku length should be 2'],
+    },
       discount: {
         type: Number,
         min: [0, 'Discount cannot be negative'],
