@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+* {
+  @apply transition-colors duration-100;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+@layer components {
+  .tooltip {
+    @apply relative inline-block;
+  }
+  
+  .tooltip::before {
+    @apply absolute z-50 hidden rounded-md bg-black px-2 py-1 text-xs font-medium text-white whitespace-nowrap;
+    content: attr(data-tooltip);
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .tooltip::after {
+    @apply absolute z-50 hidden h-0 w-0 border-4 border-transparent border-t-black;
+    content: '';
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .tooltip:hover::before,
+  .tooltip:hover::after {
+    @apply block;
+  }
+}
+
+/* Custom dark mode styles */
+.dark {
+  @apply bg-gray-900 text-gray-100;
+  
+  /* Add any element-specific dark mode overrides */
+  table {
+    @apply border-gray-700;
+    
+    th, td {
+      @apply border-gray-700;
+    }
+  }
+  
+  input, select, textarea {
+    @apply bg-gray-800 border-gray-700 text-white;
+  }
+}

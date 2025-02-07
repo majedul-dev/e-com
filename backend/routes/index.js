@@ -12,7 +12,7 @@ const {allUsers, updateUser, userDetails, logoutUser, userSignIn, userSignUp} = 
 router.post("/signup",userSignUp)
 router.post("/signin",userSignIn)
 router.get("/user-details",authToken,userDetails)
-router.get("/userLogout",logoutUser)
+router.post("/userLogout",logoutUser)
 
 //admin panel routes
 router.get("/all-user",authToken,allUsers)
