@@ -3,10 +3,21 @@ const productModel = require("../../models/productModel");
 const getProductController = async (req, res) => {
     try {
         // Extract pagination and filter parameters from the request
-        const { page = 1, limit = 10, category, minPrice, maxPrice, sortBy = 'createdAt', sortOrder = -1 } = req.query;
+        const { page = 1, limit = 10, category, minPrice, maxPrice, sortBy = 'createdAt', sortOrder = -1, search } = req.query;
 
         // Build the filter object dynamically based on query parameters
         let filter = {};
+
+        if (search) {
+            filter.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+                { category: { $regex: search, $options: 'i' } },
+                { sku: { $regex: search, $options: 'i' } },
+                { brandName: { $regex: search, $options: 'i' } },
+                { tags: { $regex: search, $options: 'i' } },
+            ];
+        }
         
         if (category) {
             filter.category = category;

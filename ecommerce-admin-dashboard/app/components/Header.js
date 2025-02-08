@@ -14,6 +14,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { useTheme } from '@/context/ThemeContext';
 import { useSession } from "next-auth/react";
 import SignOutButton from './SignOutButton';
+import Link from 'next/link';
 
 const Header = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -200,13 +201,13 @@ const Header = () => {
               <Menu.Items className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg py-1">
                 <Menu.Item>
                   {({ active }) => (
-                    <button
-                      className={`${
-                        active ? 'bg-gray-100 dark:bg-gray-700' : ''
-                      } w-full px-4 py-2 text-left text-sm`}
+                    <Link
+                      href="/dashboard/profile"
                     >
-                      View Profile
-                    </button>
+                      <span className={`${active ? 'bg-gray-100 dark:bg-gray-700' : ''} w-full px-4 py-2 text-left text-sm`}>
+                        View Profile
+                      </span>
+                    </Link>
                   )}
                 </Menu.Item>
                 <Menu.Item>
