@@ -9,6 +9,7 @@ import {
   ArrowsUpDownIcon
 } from '@heroicons/react/24/outline';
 import BulkActions from '../BulkActions';
+import DeleteModal from '../DeleteModal';
 // import { stockColor, stockStatus, statusColors } from '../../utils/productUtils';
 
 export default function ProductList({ products }) {
@@ -16,6 +17,7 @@ export default function ProductList({ products }) {
   const [isDeleteProductModalOpen, setIsDeleteProductModalOpen] = useState(false);
   const [sortField, setSortField] = useState(null);
 
+  console.log(selectedProducts && selectedProducts[0])
   const handleBulkDelete = () => {
     setIsDeleteProductModalOpen(true);
   };
@@ -97,6 +99,13 @@ export default function ProductList({ products }) {
 
   return (
     <>
+      {isDeleteProductModalOpen &&
+        <DeleteModal
+          isOpen={isDeleteProductModalOpen}
+          selectedCount={selectedProducts}
+          itemName={selectedProducts[0]}
+          onClose={() => setIsDeleteProductModalOpen(false)}
+        />}
     <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead className="bg-gray-50 dark:bg-gray-700">
@@ -134,7 +143,7 @@ export default function ProductList({ products }) {
           </tr>
         </thead>
         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-          {products?.data.map((product) => (
+            {products?.data.map((product) => (
             <tr key={product._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
               <td className="px-6 py-4">
                 <input
@@ -145,11 +154,11 @@ export default function ProductList({ products }) {
                 />
               </td>
               <td className="px-6 py-4">
-                <Link href={`/dashboard/products/${product._id}`}>
+                <Link href={`/products/${product._id}`}>
                   <div className="flex items-center">
                     <img
                       src={product.productImage[0]}
-                      alt={product.name}
+                      alt={product.productName}
                       className="h-12 w-12 object-cover rounded-md mr-4 border border-gray-200 dark:border-gray-700"
                     />
                     <div>
@@ -177,7 +186,12 @@ export default function ProductList({ products }) {
                   <button className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
                     <EyeIcon className="h-5 w-5" />
                   </button>
-                  <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" onClick={() => setIsDeleteProductModalOpen(true)}>
+                    <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                      onClick={() => {
+                        setIsDeleteProductModalOpen(true)
+                        setSelectedProducts([product._id])
+                      }}
+                    >
                     <TrashIcon className="h-5 w-5" />
                   </button>
                 </div>

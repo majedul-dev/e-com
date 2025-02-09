@@ -25,22 +25,23 @@ export default function ProductForm() {
   const router = useRouter();
   const [status, setStatus] = useState('draft');
   const [productData, setProductData] = useState({
-    title: '',
+    productName: '',
     description: '',
     price: '',
-    comparePrice: '',
+    sellingPrice: '',
     costPerItem: '',
     sku: '',
     stock: 0,
     weight: '',
     status: 'draft',
     variants: [],
-    images: [],
+    productImage: [],
     seoTitle: '',
     seoDescription: '',
     category: '',
     brandName: '',
     tags: [],
+    isPublished: true,
     isFeatured: false,
     discount: 0
   });
@@ -51,7 +52,7 @@ export default function ProductForm() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!productData.title) newErrors.title = 'Product title is required';
+    if (!productData.productName) newErrors.productName = 'Product title is required';
     if (!productData.price) newErrors.price = 'Price is required';
     if (!productData.sku) newErrors.sku = 'SKU is required';
     if (productData.stock < 0) newErrors.stock = 'Stock cannot be negative';
@@ -85,7 +86,7 @@ export default function ProductForm() {
       url: URL.createObjectURL(file),
       file
     }));
-    setProductData(prev => ({ ...prev, images: [...prev.images, ...newImages] }));
+    setProductData(prev => ({ ...prev, productImage: [...prev.productImage, ...newImages] }));
   };
 
   const handleAddTag = () => {
@@ -110,7 +111,7 @@ export default function ProductForm() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <Link
-          href="/dashboard/products"
+          href="/products"
           className="flex items-center text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
         >
           <ArrowLeftIcon className="h-5 w-5 mr-2" />
@@ -167,11 +168,11 @@ export default function ProductForm() {
                   Product Title *
                   <input
                     type="text"
-                    value={productData.title}
-                    onChange={(e) => setProductData({ ...productData, title: e.target.value })}
-                    className={`mt-1 block w-full rounded-lg border ${errors.title ? 'border-red-500' : 'border-gray-200'} p-2`}
+                    value={productData.productName}
+                    onChange={(e) => setProductData({ ...productData, productName: e.target.value })}
+                    className={`mt-1 block w-full rounded-lg border ${errors.productName ? 'border-red-500' : 'border-gray-200'} p-2`}
                   />
-                  {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+                  {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName}</p>}
                 </label>
               </div>
 
@@ -310,8 +311,8 @@ export default function ProductForm() {
                     Compare at Price
                     <input
                       type="number"
-                      value={productData.comparePrice}
-                      onChange={(e) => setProductData({ ...productData, comparePrice: e.target.value })}
+                      value={productData.sellingPrice}
+                      onChange={(e) => setProductData({ ...productData, sellingPrice: e.target.value })}
                       className="mt-1 block w-full rounded-lg border border-gray-200 p-2"
                     />
                   </label>
@@ -369,7 +370,7 @@ export default function ProductForm() {
                 </label>
               </div>
               <div className="grid grid-cols-4 gap-4">
-                {productData.images.map((image, index) => (
+                {productData.productImage.map((image, index) => (
                   <div key={index} className="relative group">
                     <img
                       src={image.url}

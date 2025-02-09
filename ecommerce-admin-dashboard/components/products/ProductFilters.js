@@ -26,7 +26,7 @@ export default function ProductFilters() {
     // Reset to first page when filters change
     params.set("page", "1");
 
-    router.push(`/dashboard/products?${params.toString()}`);
+    router.push(`/products?${params.toString()}`);
   }, [filters, router]);
 
   const handleFilterChange = (key, value) => {

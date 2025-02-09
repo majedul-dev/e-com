@@ -11,9 +11,9 @@ import {
   EyeIcon,
   TrashIcon
 } from '@heroicons/react/24/outline';
-import Pagination from '../../components/Pagination';
-import BulkActions from '../../components/BulkActions';
-import DeleteModal from '../../components/DeleteModal';
+import Pagination from '../../../components/Pagination';
+import BulkActions from '../../../components/BulkActions';
+import DeleteModal from '../../../components/DeleteModal';
 
 const customers = [
   {

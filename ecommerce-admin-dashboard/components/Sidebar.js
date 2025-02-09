@@ -20,17 +20,17 @@ export default function Sidebar() {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
-    { name: 'Products', href: '/dashboard/products', icon: SquaresPlusIcon },
-    { name: 'Categories', href: '/dashboard/categories', icon: FolderIcon },
-    { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCartIcon },
-    { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-    { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
-    { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
+    { name: 'Products', href: '/products', icon: SquaresPlusIcon },
+    { name: 'Categories', href: '/categories', icon: FolderIcon },
+    { name: 'Orders', href: '/orders', icon: ShoppingCartIcon },
+    { name: 'Customers', href: '/customers', icon: UserGroupIcon },
+    { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
+    { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
   ];
 
   const secondaryNavigation = [
-    { name: 'Create Product', href: '/dashboard/products/new', icon: PlusIcon },
-    { name: 'Add Category', href: '/dashboard/categories/new', icon: PlusIcon },
+    { name: 'Create Product', href: '/products/new', icon: PlusIcon },
+    { name: 'Add Category', href: '/categories/new', icon: PlusIcon },
   ];
 
   return (

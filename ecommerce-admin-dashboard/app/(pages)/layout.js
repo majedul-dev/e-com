@@ -1,7 +1,7 @@
 // Add this directive at the top
-import Providers from '../components/Providers';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
+import Providers from '../../components/Providers';
+import Header from '../../components/Header';
+import Sidebar from '../../components/Sidebar';
 
 export default function RootLayout({ children }) {
   return (

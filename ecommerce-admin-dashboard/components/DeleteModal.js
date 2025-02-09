@@ -15,7 +15,6 @@ export default function DeleteModal({
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
         <h3 className="text-lg font-bold mb-4 dark:text-white">Confirm Delete</h3>
         <p className="mb-4 dark:text-gray-300">
-          Delete {selectedCount} {itemName}{selectedCount !== 1 && 's'}?
           This action cannot be undone.
         </p>
         <div className="flex justify-end gap-3">
@@ -29,7 +28,7 @@ export default function DeleteModal({
             onClick={onConfirm}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors"
           >
-            Delete {itemName.charAt(0).toUpperCase() + itemName.slice(1)}{selectedCount !== 1 && 's'}
+            Delete
           </button>
         </div>
       </div>
