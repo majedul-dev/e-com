@@ -19,7 +19,7 @@ router.get("/all-user",authToken,allUsers)
 router.post("/update-user",authToken,updateUser)
 
 //product routes
-router.post("/product/upload-product",authToken,uploadProduct)
+router.post("/product/upload-product",uploadProduct)
 router.get("/product/get-product", getAllProducts)
 router.patch("/product/update-product/:productId",authToken,updateProduct)
 router.get("/product/get-categoryProduct",getProductsByCategory)

@@ -1,5 +1,5 @@
 import React from "react";
-import { getProductDetails } from "@/lib/productAction";
+import { getProductDetails } from "@/app/lib/productAction";
 import ProductImageGallery from "./ProductImageGallery";
 import ProductReviews from "./ProductReviews";
 

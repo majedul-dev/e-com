@@ -2,7 +2,7 @@ import ProductList from "../../../components/products/ProductList";
 import ProductFilters from "../../../components/products/ProductFilters";
 import Pagination from "../../../components/Pagination";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { getAllProducts } from "../../../lib/productAction";
+import { getAllProducts } from "../../lib/productAction";
 import PageHeader from "@/components/PageHeader";
 
 export default async function ProductsPage({ searchParams }) {

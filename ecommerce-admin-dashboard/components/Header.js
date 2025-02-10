@@ -26,6 +26,7 @@ const Header = () => {
   
   const { data: session, status } = useSession();
 
+  console.log(session?.user?.token)
   const notifications = [
     { id: 1, text: 'New order received', time: '2 min ago' },
     { id: 2, text: 'Payment received', time: '15 min ago' },

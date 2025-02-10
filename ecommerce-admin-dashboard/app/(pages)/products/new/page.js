@@ -2,6 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cors from 'nextjs-cors';
 import Link from 'next/link';
 import {
   ArrowLeftIcon,
@@ -16,6 +17,9 @@ import {
   TrashIcon,
   PlusIcon
 } from '@heroicons/react/24/outline';
+import uploadImage from '@/utils/uploadImage';
+// import { createProduct } from '@/app/lib/productAction';
+// import { createProduct } from '@/lib/productAction';
 
 // Sample data - replace with API calls
 const categories = ['Electronics', 'Fashion', 'Home & Kitchen', 'Books'];
@@ -24,6 +28,8 @@ const brands = ['Apple', 'Samsung', 'Nike', 'Sony'];
 export default function ProductForm() {
   const router = useRouter();
   const [status, setStatus] = useState('draft');
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [productData, setProductData] = useState({
     productName: '',
     description: '',
@@ -35,7 +41,7 @@ export default function ProductForm() {
     weight: '',
     status: 'draft',
     variants: [],
-    productImage: [],
+    productImage: selectedImages,
     seoTitle: '',
     seoDescription: '',
     category: '',
@@ -56,6 +62,7 @@ export default function ProductForm() {
     if (!productData.price) newErrors.price = 'Price is required';
     if (!productData.sku) newErrors.sku = 'SKU is required';
     if (productData.stock < 0) newErrors.stock = 'Stock cannot be negative';
+    // if (productData.productImage.length < 1) newErrors.productImage = 'At list one product image required';
     if (!productData.category) newErrors.category = 'Category is required';
     if (status === 'published' && !productData.description) {
       newErrors.description = 'Description is required for publishing';
@@ -64,13 +71,33 @@ export default function ProductForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+    await Cors(req, res);
     
     // Submit logic here
-    console.log('Submitting product:', productData);
-    router.push('/products');
+    try {
+      const response = await fetch(`https://8080-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io/api/product/upload-product`, {
+        method: 'POST',
+        credentials: "include",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
+      });
+
+      console.log(productData, response) 
+      // if (!response.ok) throw new Error('Failed to create product');
+
+      // router.push('/products');
+    } catch (error) {
+      console.log(error)
+      console.error('Error submitting product:', error);
+      setErrors({ submit: 'Failed to create product. Try again later.' });
+    } finally {
+      setLoading(false);
+    }
+    // console.log(newProduct)
+    // router.push('/products');
   };
 
   const handleAddVariant = () => {
@@ -80,14 +107,153 @@ export default function ProductForm() {
     }));
   };
 
-  const handleImageUpload = (e) => {
+  // const handleImageUpload = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   const newImages = files.map(file => ({
+  //     url: URL.createObjectURL(file),
+  //     file
+  //   }));
+  //   setProductData(prev => ({ ...prev, productImage: [...prev.productImage, ...newImages] }));
+  // };
+  // const handleRemoveImage = (index) => {
+    
+  //   setProductData((prev) => ({
+  //     ...prev,
+  //     productImage: prev.productImage.filter((image) => image !== index),
+  //   }));
+  // };
+
+  // const handleImageUpload = async (e) => {
+  //   const files = Array.from(e.target.files);
+  
+  //   try {
+  //     // Upload images to Cloudinary
+  //     const uploadPromises = files.map(async (file) => {
+  //       const formData = new FormData();
+  //       formData.append("file", file);
+  //       formData.append("upload_products", "products_images"); // Replace with your Cloudinary upload preset
+  
+  //       console.log("formdata ",formData)
+  //       const response = await fetch(`https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`, {
+  //         method: "POST",
+  //         body: formData,
+  //       });
+  
+  //       const data = await response.json();
+  //       return { url: data.secure_url, file }; // Store the Cloudinary URL
+  //     });
+  
+  //     const uploadedImages = await Promise.all(uploadPromises);
+  
+  //     // Update state with uploaded image URLs
+  //     setProductData(prev => ({
+  //       ...prev,
+  //       productImage: [...prev.productImage, ...uploadedImages]
+  //     }));
+  //     console.log(productData.productImage)
+  //   } catch (error) {
+  //     console.error("Image upload failed:", error);
+  //     alert("Failed to upload images. Please try again.");
+  //   }
+  // };
+  // Handle image selection
+  const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map(file => ({
-      url: URL.createObjectURL(file),
-      file
-    }));
-    setProductData(prev => ({ ...prev, productImage: [...prev.productImage, ...newImages] }));
+    setSelectedImages((prev) => [...prev, ...files]);
   };
+
+  // Remove selected image before upload
+  const handleRemoveImage = (index) => {
+    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+   // Upload all selected images
+   const handleUploadImages = async () => {
+    const uploaded = await Promise.all(selectedImages.map((image) => uploadImage(image)));
+
+    setProductData((prev) => ({
+      ...prev,
+      productImage: [...uploaded.map((img) => img.secure_url)]
+    }));
+     
+    setSelectedImages([]);
+  };
+
+  // const handleImageUpload = async (e) => {
+  //   const file = e.target.files
+  //   const uploadImageCloudinary = await uploadImage(file)
+  //   console.log(uploadImageCloudinary)
+
+  //   setProductData((preve) => {
+  //     return{
+  //       ...preve,
+  //       productImage: [...preve.productImage, {
+  //         url: uploadImageCloudinary.url,
+  //         publicId: uploadImageCloudinary.public_id,
+  //         deleteToken: uploadImageCloudinary.delete_token
+  //       }]
+  //     }
+  //   })
+  // };
+
+  // const handleDeleteImage = async (publicId, deleteToken) => {
+  //   console.log(deleteToken)
+  //   try {
+  //     await fetch(`https://api.cloudinary.com/v1_1/majedul/${deleteToken}`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       },
+  //       body: JSON.stringify({ public_id: publicId })
+  //     });
+  
+  //     // Remove image from state
+  //     setProductData((prev) => ({
+  //       ...prev,
+  //       productImage: prev.productImage.filter(image => image.publicId !== publicId)
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error deleting image:", error);
+  //   }
+  // };
+  const handleDeleteImage = async (publicId, deleteToken) => {
+    try {
+      // 3. Make the delete request
+      const response = await fetch(`https://api.cloudinary.com/v1_1/majedul/image/destroy`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          public_id: publicId,
+          token: deleteToken
+        })
+      });
+  
+      // 4. Handle the response
+      const result = await response.json();
+
+      console.log(result)
+      
+      if (result.result !== "ok") {
+        throw new Error('Failed to delete image from Cloudinary');
+      }
+  
+      // 5. Update local state after successful deletion
+      setProductData(prev => ({
+        ...prev,
+        productImage: prev.productImage.filter(
+          image => image.public_id !== publicId
+        ),
+      }));
+  
+    } catch (error) {
+      console.error("Delete error:", error);
+      // Handle errors in your UI here
+    }
+  };
+
+  console.log(productData.productImage)
 
   const handleAddTag = () => {
     if (tempTag.trim() && !productData.tags.includes(tempTag.trim())) {
@@ -355,7 +521,7 @@ export default function ProductForm() {
                 <input
                   type="file"
                   multiple
-                  onChange={handleImageUpload}
+                  onChange={handleImageChange}
                   className="hidden"
                   id="imageUpload"
                 />
@@ -370,19 +536,24 @@ export default function ProductForm() {
                 </label>
               </div>
               <div className="grid grid-cols-4 gap-4">
-                {productData.productImage.map((image, index) => (
+                {selectedImages.map((image, index) => (
                   <div key={index} className="relative group">
                     <img
-                      src={image.url}
+                      src={URL.createObjectURL(image)}
                       alt={`Product ${index + 1}`}
                       className="rounded-lg h-32 w-full object-cover"
                     />
-                    <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-sm hover:bg-red-100">
+                    <button onClick={() => handleRemoveImage(index)} className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-sm hover:bg-red-100">
                       <TrashIcon className="h-5 w-5 text-red-600" />
                     </button>
                   </div>
                 ))}
               </div>
+              <button
+                onClick={handleUploadImages}
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                // disabled={loading}
+              >Upload</button>
             </div>
           )}
 

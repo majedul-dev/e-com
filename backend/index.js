@@ -7,7 +7,15 @@ const router = require('./routes')
 
 
 const app = express()
-app.use(cors())
+
+const corsOptions = {
+    origin: 'https://3000-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true // Allow cookies and authentication headers
+};
+  
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
