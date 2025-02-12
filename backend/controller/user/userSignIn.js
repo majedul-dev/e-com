@@ -122,13 +122,14 @@ async function userSignInController(req, res) {
     const tokenOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Secure in production
-      sameSite: "strict", // Prevent CSRF attacks
+      sameSite: "Lax", // Prevent CSRF attacks
       maxAge: 8 * 60 * 60 * 1000, // 8 hours in milliseconds
     };
 
     // Send response with token in a cookie
     res
       .cookie("token", token, tokenOptions)
+      .header("Authorization", `Bearer ${token}`)
       .status(200)
       .json({
         success: true,
@@ -138,7 +139,8 @@ async function userSignInController(req, res) {
           id: user._id,
           email: user.email,
           name: user.name,
-          role: user.role
+          role: user.role,
+          token
         },
       });
   } catch (err) {
