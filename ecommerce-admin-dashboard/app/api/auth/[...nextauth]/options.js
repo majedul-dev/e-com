@@ -11,13 +11,14 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 try {
-                    const res = await fetch(`${process.env.BACKEND_URL}/api/signin`, {
+                    const res = await fetch(`https://8080-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io/api/signin`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             email: credentials.email,
                             password: credentials.password,
                         }),
+                        credentials: "include", 
                     });
 
                     if (!res.ok) {
@@ -26,11 +27,17 @@ export const authOptions = {
                     
                     const data = await res.json();
 
-                    if (data.success && data.data) {
-                        return data.data; // Ensure API returns expected structure
-                    } else {
-                        return null; // Return null instead of throwing an error
-                    }
+                    if (data.success && data.user) {
+                        return {
+                          // Extract user details and token from data.data
+                          id: data.user.id,
+                          name: data.user.name,
+                          email: data.user.email,
+                          token: data.user.token, // <– Token is extracted here
+                        };
+                      } else {
+                        return null;
+                      }
 
                 } catch (error) {
                     throw new Error(error.message || "Something went wrong");
@@ -41,23 +48,24 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id 
-                token.name = user.name
-                token.email = user.email
-                token.token = user.token
-            }
-            return token
+                token = {
+                  ...token,
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                  accessToken: user.token, // Store the token as accessToken
+                };
+              }
+              return token;
         },
         async session({ session, token }) {
-            if (!token) {
-                return null
-            } else {
-                session.user.id = token.id
-                session.user.name = token.name
-                session.user.email = token.email
-                session.user.token = token.token
-            }
-            return session
+            session.user = {
+                id: token.id,
+                name: token.name,
+                email: token.email,
+              };
+              session.accessToken = token.accessToken; // Token is available here
+              return session;
         },  
     },
     pages: {

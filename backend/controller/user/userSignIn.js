@@ -121,8 +121,8 @@ async function userSignInController(req, res) {
     // Cookie options
     const tokenOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Secure in production
-      sameSite: "strict", // Prevent CSRF attacks
+      secure: false, 
+      sameSite: "none", // Prevent CSRF attacks
       maxAge: 8 * 60 * 60 * 1000, // 8 hours in milliseconds
     };
 
@@ -134,7 +134,7 @@ async function userSignInController(req, res) {
         success: true,
         error: false,
         message: "Login successful",
-        data: {
+        user: {
           id: user._id,
           email: user.email,
           name: user.name,

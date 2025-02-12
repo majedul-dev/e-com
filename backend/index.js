@@ -8,16 +8,24 @@ const router = require('./routes')
 
 const app = express()
 
-const corsOptions = {
-    origin: 'https://3000-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io', // Replace with your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    credentials: true // Allow cookies and authentication headers
-};
+const allowedOrigins = [
+    'https://3000-majeduldev-ecom-*.gitpod.io', // Wildcard for dynamic subdomains
+    'https://3000-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io' // Exact origin
+  ];
   
+  const corsOptions = {
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  };
 app.use(cors(corsOptions))
-app.use(express.json())
+app.options('*', cors(corsOptions));
+
+// app.use(cors())
+
 app.use(cookieParser())
+app.use(express.json())
 
 app.use("/api",router)
 

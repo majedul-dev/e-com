@@ -3,8 +3,8 @@ async function userLogout(req, res) {
       // Clear the authentication cookie
       res.clearCookie("token", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: true,
+        sameSite: 'none',
       });
   
       // Respond with success

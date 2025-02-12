@@ -2,7 +2,6 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Cors from 'nextjs-cors';
 import Link from 'next/link';
 import {
   ArrowLeftIcon,
@@ -18,6 +17,7 @@ import {
   PlusIcon
 } from '@heroicons/react/24/outline';
 import uploadImage from '@/utils/uploadImage';
+import { getSession, useSession } from 'next-auth/react';
 // import { createProduct } from '@/app/lib/productAction';
 // import { createProduct } from '@/lib/productAction';
 
@@ -74,17 +74,23 @@ export default function ProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    await Cors(req, res);
+    const session = await getSession()
     
+    console.log("accesstoken", session?.accessToken)
     // Submit logic here
     try {
-      const response = await fetch(`https://8080-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io/api/product/upload-product`, {
-        method: 'POST',
-        credentials: "include",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData)
-      });
-
+      const response = await fetch(
+        `https://8080-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io/api/product/upload-product`,
+        {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session?.accessToken}`  // Send token in header
+            },
+            credentials: "include",  
+            body: JSON.stringify(productData)
+        }
+    );
       console.log(productData, response) 
       // if (!response.ok) throw new Error('Failed to create product');
 

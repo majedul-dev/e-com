@@ -6,7 +6,7 @@ export default function SignOutButton() {
   const handleLogout = async () => {
     try {
       // 1. Call external API logout
-      const apiResponse = await fetch(`${process.env.BACKEND_URL}/api/userLogout`, {
+      const apiResponse = await fetch(`https://8080-majeduldev-ecom-dxiwo2blvmm.ws-us117.gitpod.io/api/userLogout`, {
         method: 'POST'
       });
       const res = await apiResponse.json()
